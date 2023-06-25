@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<checkstyle version="10.10.0">
+<file name="/Users/johnnyassad/Desktop/cs3500/terminal-battleship/src/test/java/cs3500/pa03/DriverTest.java">
+</file>
+<file name="/Users/johnnyassad/Desktop/cs3500/terminal-battleship/src/test/java/controller/BattleshipSalvoTest.java">
+</file>
+<file name="/Users/johnnyassad/Desktop/cs3500/terminal-battleship/src/test/java/model/ArtificialPlayerTest.java">
+</file>
+<file name="/Users/johnnyassad/Desktop/cs3500/terminal-battleship/src/test/java/model/GameResultTest.java">
+</file>
+<file name="/Users/johnnyassad/Desktop/cs3500/terminal-battleship/src/test/java/model/CoordTest.java">
+</file>
+<file name="/Users/johnnyassad/Desktop/cs3500/terminal-battleship/src/test/java/model/RealPlayerTest.java">
+</file>
+<file name="/Users/johnnyassad/Desktop/cs3500/terminal-battleship/src/test/java/model/AbstractPlayerTest.java">
+</file>
+<file name="/Users/johnnyassad/Desktop/cs3500/terminal-battleship/src/test/java/model/CoordStatusTest.java">
+</file>
+<file name="/Users/johnnyassad/Desktop/cs3500/terminal-battleship/src/test/java/model/ShipTest.java">
+</file>
+<file name="/Users/johnnyassad/Desktop/cs3500/terminal-battleship/src/test/java/model/ShipTypeTest.java">
+</file>
+<file name="/Users/johnnyassad/Desktop/cs3500/terminal-battleship/src/test/java/view/ViewImplTest.java">
+</file>
+</checkstyle>

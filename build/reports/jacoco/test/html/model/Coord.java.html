@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Coord.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">BattleSalvo</a> &gt; <a href="index.source.html" class="el_package">model</a> &gt; <span class="el_source">Coord.java</span></div><h1>Coord.java</h1><pre class="source lang-java linenums">package model;
+
+/**
+ * Represents a coordinate with a location in 2D space and a BattleSalvo coord status.
+ */
+public class Coord {
+
+  private int xVal;
+  private int yVal;
+  private CoordStatus status;
+
+  /**
+   * Creates a Coord object.
+   *
+   * @param x - x value of this Coord.
+   * @param y - y value of this Coord.
+   * @param status - CoordStatus of this Coord.
+   */
+<span class="fc" id="L19">  public Coord(int x, int y, CoordStatus status) {</span>
+
+<span class="fc" id="L21">    this.xVal = x;</span>
+<span class="fc" id="L22">    this.yVal = y;</span>
+<span class="fc" id="L23">    this.status = status;</span>
+
+<span class="fc" id="L25">  }</span>
+
+  /**
+   * Gets this coord's status.
+   *
+   * @return - This coord's CoordStatus.
+   */
+  public CoordStatus getStatus() {
+<span class="fc" id="L33">    return status;</span>
+  }
+
+  /**
+   * Gets this coord's x value.
+   *
+   * @return - This coord's integer x value.
+   */
+  public int getX() {
+<span class="fc" id="L42">    return xVal;</span>
+  }
+
+  /**
+   * Gets this coord's y value.
+   *
+   * @return - This coord's integer y value.
+   */
+  public int getY() {
+<span class="fc" id="L51">    return yVal;</span>
+  }
+
+  /**
+   * Mutates this coord's status to the given parameter CoordStatus.
+   *
+   * @param newStatus - This coord's desired new status.
+   */
+  public void changeStatus(CoordStatus newStatus) {
+<span class="fc" id="L60">    status = newStatus;</span>
+<span class="fc" id="L61">  }</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.10.202304240956</span></div></body></html>

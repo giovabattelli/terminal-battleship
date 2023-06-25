@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<checkstyle version="10.10.0">
+<file name="/Users/johnnyassad/Desktop/cs3500/terminal-battleship/src/main/java/Driver.java">
+</file>
+<file name="/Users/johnnyassad/Desktop/cs3500/terminal-battleship/src/main/java/controller/Controller.java">
+</file>
+<file name="/Users/johnnyassad/Desktop/cs3500/terminal-battleship/src/main/java/controller/BattleshipSalvo.java">
+</file>
+<file name="/Users/johnnyassad/Desktop/cs3500/terminal-battleship/src/main/java/model/RealPlayer.java">
+</file>
+<file name="/Users/johnnyassad/Desktop/cs3500/terminal-battleship/src/main/java/model/GameResult.java">
+</file>
+<file name="/Users/johnnyassad/Desktop/cs3500/terminal-battleship/src/main/java/model/ArtificialPlayer.java">
+</file>
+<file name="/Users/johnnyassad/Desktop/cs3500/terminal-battleship/src/main/java/model/Ship.java">
+</file>
+<file name="/Users/johnnyassad/Desktop/cs3500/terminal-battleship/src/main/java/model/CoordStatus.java">
+</file>
+<file name="/Users/johnnyassad/Desktop/cs3500/terminal-battleship/src/main/java/model/ShipType.java">
+</file>
+<file name="/Users/johnnyassad/Desktop/cs3500/terminal-battleship/src/main/java/model/Coord.java">
+<error line="8" column="15" severity="warning" message="Member name &apos;xVal&apos; must match pattern &apos;^[a-z][a-z0-9][a-zA-Z0-9]*$&apos;." source="com.puppycrawl.tools.checkstyle.checks.naming.MemberNameCheck"/>
+<error line="9" column="15" severity="warning" message="Member name &apos;yVal&apos; must match pattern &apos;^[a-z][a-z0-9][a-zA-Z0-9]*$&apos;." source="com.puppycrawl.tools.checkstyle.checks.naming.MemberNameCheck"/>
+</file>
+<file name="/Users/johnnyassad/Desktop/cs3500/terminal-battleship/src/main/java/model/Player.java">
+</file>
+<file name="/Users/johnnyassad/Desktop/cs3500/terminal-battleship/src/main/java/model/Board.java">
+</file>
+<file name="/Users/johnnyassad/Desktop/cs3500/terminal-battleship/src/main/java/model/AbstractPlayer.java">
+</file>
+<file name="/Users/johnnyassad/Desktop/cs3500/terminal-battleship/src/main/java/view/ViewImpl.java">
+</file>
+<file name="/Users/johnnyassad/Desktop/cs3500/terminal-battleship/src/main/java/view/IView.java">
+<error line="6" column="18" severity="warning" message="Abbreviation in name &apos;IView&apos; must contain no more than &apos;1&apos; consecutive capital letters." source="com.puppycrawl.tools.checkstyle.checks.naming.AbbreviationAsWordInNameCheck"/>
+</file>
+</checkstyle>

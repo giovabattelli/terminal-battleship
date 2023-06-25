@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>BattleshipSalvo.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">BattleSalvo</a> &gt; <a href="index.source.html" class="el_package">controller</a> &gt; <span class="el_source">BattleshipSalvo.java</span></div><h1>BattleshipSalvo.java</h1><pre class="source lang-java linenums">package controller;
+
+import static model.ShipType.BATTLESHIP;
+import static model.ShipType.CARRIER;
+import static model.ShipType.DESTROYER;
+import static model.ShipType.SUBMARINE;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
+import java.util.Scanner;
+import model.AbstractPlayer;
+import model.ArtificialPlayer;
+import model.Board;
+import model.Coord;
+import model.RealPlayer;
+import model.Ship;
+import model.ShipType;
+import view.ViewImpl;
+
+/**
+ * Controller for battleship salvo game that handles player interaction
+ */
+public class BattleshipSalvo implements Controller {
+
+  private ViewImpl view;
+  private int height;
+  private int width;
+<span class="fc" id="L30">  private Map&lt;ShipType, Integer&gt; specifications = new HashMap&lt;&gt;();</span>
+  private ShipType[] shipTypes;
+  private Random random1;
+  private Random random2;
+  private Scanner sc;
+
+  /**
+   * Creates a controller object for a game of BattleSalvo in which a console player plays against
+   * an AI player.
+   *
+   * @param input  - Readable input, from where input is coming from.
+   * @param output - Appendable output, where the output goes.
+   */
+<span class="fc" id="L43">  public BattleshipSalvo(Readable input, Appendable output) {</span>
+
+<span class="fc" id="L45">    this.view = new ViewImpl(input, output);</span>
+<span class="fc" id="L46">    this.random1 = new Random();</span>
+<span class="fc" id="L47">    this.random2 = new Random();</span>
+<span class="fc" id="L48">    specifications.put(CARRIER, 0);</span>
+<span class="fc" id="L49">    specifications.put(BATTLESHIP, 0);</span>
+<span class="fc" id="L50">    specifications.put(DESTROYER, 0);</span>
+<span class="fc" id="L51">    specifications.put(SUBMARINE, 0);</span>
+<span class="fc" id="L52">    this.shipTypes = new ShipType[] {CARRIER, BATTLESHIP, DESTROYER, SUBMARINE};</span>
+<span class="fc" id="L53">    sc = new Scanner(input);</span>
+
+<span class="fc" id="L55">  }</span>
+
+  /**
+   * Creates a controller object for a game of BattleSalvo in which a console player plays against
+   * an AI player, with seeded randoms.
+   *
+   * @param input  - Readable input, from where input is coming from.
+   * @param output - Appendable output, where the output goes.
+   * @param seed1  - Seed for seeding random in AI player (for testing).
+   * @param seed2  - Seed for seeding random in real user console player (for testing).
+   */
+  public BattleshipSalvo(Readable input, Appendable output, int seed1, int seed2) {
+<span class="fc" id="L67">    this(input, output);</span>
+<span class="fc" id="L68">    this.random1 = new Random(seed1);</span>
+<span class="fc" id="L69">    this.random2 = new Random(seed2);</span>
+<span class="fc" id="L70">  }</span>
+
+  /**
+   * Runs a game of BattleSalvo in which a user interacts with the console to play against
+   * an AI player.
+   */
+  public void run() {
+
+<span class="fc" id="L78">    initBoard();</span>
+<span class="fc" id="L79">    initFleet();</span>
+<span class="fc" id="L80">    Board aiBoard = new Board(height, width);</span>
+<span class="fc" id="L81">    Board realBoard = new Board(height, width);</span>
+<span class="fc" id="L82">    AbstractPlayer aiPlayer = new ArtificialPlayer(&quot;AI&quot;, view, aiBoard, realBoard, random1);</span>
+<span class="fc" id="L83">    AbstractPlayer realUser = new RealPlayer(&quot;You&quot;, view, realBoard, aiBoard, random2);</span>
+<span class="fc" id="L84">    List&lt;Ship&gt; aiShips = aiPlayer.setup(height, width, specifications);</span>
+<span class="fc" id="L85">    List&lt;Ship&gt; realShips = realUser.setup(height, width, specifications);</span>
+
+<span class="pc bpc" id="L87" title="1 of 4 branches missed.">    while (!(isGameOver(aiShips) || (isGameOver(realShips)))) {</span>
+
+      //aiBoard.displayBoard(aiPlayer, view);
+<span class="fc" id="L90">      aiBoard.displayOpponentBoard(aiPlayer, view);</span>
+<span class="fc" id="L91">      realBoard.displayBoard(realUser, view);</span>
+
+<span class="fc" id="L93">      List&lt;Coord&gt; shotCoordsOnUserBoard = aiPlayer.takeShots();</span>
+<span class="fc" id="L94">      List&lt;Coord&gt; shotCoordsOnAiBoard = realUser.takeShots();</span>
+
+<span class="fc" id="L96">      List&lt;Coord&gt; hitShipsOnAiBoard = aiPlayer.reportDamage(shotCoordsOnAiBoard);</span>
+<span class="fc" id="L97">      List&lt;Coord&gt; hitShipsOnUserBoard = realUser.reportDamage(shotCoordsOnUserBoard);</span>
+
+<span class="fc" id="L99">      realUser.successfulHits(hitShipsOnAiBoard);</span>
+<span class="fc" id="L100">      aiPlayer.successfulHits(hitShipsOnUserBoard);</span>
+<span class="fc" id="L101">      updateSunkShips(aiShips);</span>
+<span class="fc" id="L102">      updateSunkShips(realShips);</span>
+
+<span class="fc" id="L104">    }</span>
+
+<span class="fc" id="L106">    endBattleSalvo(aiPlayer, realUser, isGameOver(aiShips), isGameOver(realShips));</span>
+
+<span class="fc" id="L108">  }</span>
+
+  /**
+   * Displays the appropriate end game text.
+   *
+   * @param ai       - The AI player.
+   * @param user     - The user playing from the console.
+   * @param aiLost   - A boolean representing whether the AI has lost or not.
+   * @param userLost - A boolean representing whether the real user has lost or not.
+   */
+  private void endBattleSalvo(
+      AbstractPlayer ai, AbstractPlayer user, boolean aiLost, boolean userLost) {
+<span class="pc bpc" id="L120" title="3 of 4 branches missed.">    if (aiLost &amp;&amp; userLost) {</span>
+<span class="nc" id="L121">      view.displayString(&quot;\n\ntie!\n&quot;);</span>
+<span class="pc bpc" id="L122" title="1 of 2 branches missed.">    } else if (aiLost) {</span>
+<span class="nc" id="L123">      view.displayString(&quot;\n\n&quot; + user.name() + &quot; won!\n&quot;);</span>
+<span class="pc bpc" id="L124" title="1 of 2 branches missed.">    } else if (userLost) {</span>
+<span class="fc" id="L125">      view.displayString(&quot;\n\n&quot; + ai.name() + &quot; won!\n&quot;);</span>
+    }
+<span class="fc" id="L127">  }</span>
+
+  /**
+   * Updates the sunk value of the ships that have sunk in parameter list of ships.
+   *
+   * @param ships - List of ships.
+   */
+  private void updateSunkShips(List&lt;Ship&gt; ships) {
+<span class="fc bfc" id="L135" title="All 2 branches covered.">    for (Ship ship : ships) {</span>
+<span class="fc" id="L136">      ship.updateSunk();</span>
+<span class="fc" id="L137">    }</span>
+<span class="fc" id="L138">  }</span>
+
+  /**
+   * Whether the BattleSalvo game is over or not for the given list of ships.
+   *
+   * @param ships - A list of ships.
+   * @return - boolean that is returned based on if all the ships in a list of ships are sunk
+   *         or if there is at least 1 ship that is not sunk.
+   */
+  private boolean isGameOver(List&lt;Ship&gt; ships) {
+<span class="fc" id="L148">    boolean gameOver = true;</span>
+
+<span class="fc bfc" id="L150" title="All 2 branches covered.">    for (Ship s : ships) {</span>
+<span class="fc bfc" id="L151" title="All 2 branches covered.">      if (!s.getSunk()) {</span>
+<span class="fc" id="L152">        gameOver = false;</span>
+<span class="fc" id="L153">        break;</span>
+      }
+<span class="fc" id="L155">    }</span>
+
+<span class="fc" id="L157">    return gameOver;</span>
+  }
+
+  /**
+   * Receives input from the user and initializes the board size for both players in a game of
+   * BattleSalvo.
+   */
+  private void initBoard() {
+
+<span class="fc" id="L166">    view.displayString(</span>
+        &quot;Welcome to BattleSalvo.\nPlease enter a valid board height and width below:\n&quot;
+<span class="fc" id="L168">            + &quot;-&quot;.repeat(66)</span>
+            + &quot;\n&quot;);
+
+<span class="pc bpc" id="L171" title="1 of 2 branches missed.">    while (sc.hasNextLine()) {</span>
+
+<span class="fc" id="L173">      String[] inputs = sc.nextLine().split(&quot; &quot;);</span>
+
+      try {
+
+<span class="fc" id="L177">        height = Integer.parseInt(inputs[0]);</span>
+<span class="fc" id="L178">        width = Integer.parseInt(inputs[1]);</span>
+
+<span class="pc bpc" id="L180" title="4 of 10 branches missed.">        if (height &lt; 6 || height &gt; 15 || width &lt; 6 || width &gt; 15 || inputs.length &gt; 2) {</span>
+<span class="fc" id="L181">          throw new Exception();</span>
+        } else {
+<span class="fc" id="L183">          break;</span>
+        }
+
+<span class="fc" id="L186">      } catch (Exception e) {</span>
+<span class="fc" id="L187">        view.displayString(</span>
+            &quot;\nInvalid dimensions. The height and width of the\n&quot;
+                + &quot;game must be in the range (6, 15) inclusive. Try again:\n&quot;
+<span class="fc" id="L190">                + &quot;-&quot;.repeat(66)</span>
+                + &quot;\n&quot;);
+      }
+<span class="fc" id="L193">    }</span>
+<span class="fc" id="L194">  }</span>
+
+  /**
+   * Receives input from the user for fleet specifications  for both players in a game of
+   * BattleSalvo.
+   */
+  private void initFleet() {
+<span class="fc" id="L201">    int minBoardSize = Math.min(height, width);</span>
+
+<span class="fc" id="L203">    view.displayString(</span>
+        &quot;\nPlease enter your fleet in the order [Carrier, Battleship, Destroyer, Submarine].\n&quot;
+            + &quot;Remember, your fleet may not exceed size &quot; + minBoardSize + &quot;.\n&quot;
+<span class="fc" id="L206">            + &quot;-&quot;.repeat(66)</span>
+            + &quot;\n&quot;);
+
+<span class="pc bpc" id="L209" title="1 of 2 branches missed.">    while (sc.hasNextLine()) {</span>
+<span class="fc" id="L210">      String[] inputs = sc.nextLine().split(&quot; &quot;);</span>
+      try {
+<span class="fc" id="L212">        int i = 0;</span>
+<span class="fc" id="L213">        int sum = 0;</span>
+<span class="fc bfc" id="L214" title="All 2 branches covered.">        for (ShipType s : shipTypes) {</span>
+<span class="fc" id="L215">          int k = Integer.parseInt(inputs[i]);</span>
+<span class="pc bpc" id="L216" title="2 of 4 branches missed.">          if (k &lt; 1 || inputs.length &gt; 4) {</span>
+<span class="nc" id="L217">            throw new Exception();</span>
+          }
+<span class="fc" id="L219">          specifications.put(s, k);</span>
+<span class="fc" id="L220">          sum += specifications.get(s);</span>
+<span class="fc" id="L221">          i++;</span>
+        }
+<span class="fc bfc" id="L223" title="All 2 branches covered.">        if (sum &gt; minBoardSize) {</span>
+<span class="fc" id="L224">          throw new Exception();</span>
+        }
+<span class="fc" id="L226">        break;</span>
+<span class="fc" id="L227">      } catch (Exception e) {</span>
+<span class="fc" id="L228">        view.displayString(</span>
+            &quot;\nInvalid fleet specifications.\n&quot;
+                + &quot;Please enter your fleet in the order [Carrier, Battleship, Destroyer, Submarine]&quot;
+                + &quot;.\nRemember, your fleet may not exceed size &quot; + minBoardSize + &quot;.\n&quot;
+<span class="fc" id="L232">                + &quot;-&quot;.repeat(66) + &quot;\n&quot;);</span>
+      }
+<span class="fc" id="L234">    }</span>
+<span class="fc" id="L235">  }</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.10.202304240956</span></div></body></html>

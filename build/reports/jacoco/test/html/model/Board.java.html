@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Board.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">BattleSalvo</a> &gt; <a href="index.source.html" class="el_package">model</a> &gt; <span class="el_source">Board.java</span></div><h1>Board.java</h1><pre class="source lang-java linenums">package model;
+
+import static model.CoordStatus.MISS;
+import static model.CoordStatus.UNKNOWN;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Random;
+import view.ViewImpl;
+
+/**
+ * Represents a board in a game of BattleSalvo
+ */
+public class Board {
+
+  protected Coord[][] coords;
+<span class="fc" id="L18">  private boolean addToArray = true;</span>
+<span class="fc" id="L19">  private ArrayList&lt;Coord&gt; arrayOfCoords = new ArrayList&lt;&gt;();</span>
+
+  /**
+   * Creates a Board object.
+   *
+   * @param height - Height of this Board.
+   * @param width - Width of this Board.
+   */
+<span class="fc" id="L27">  public Board(int height, int width) {</span>
+
+<span class="fc" id="L29">    this.coords = new Coord[height][width];</span>
+
+<span class="fc" id="L31">    initCoords();</span>
+
+<span class="fc" id="L33">  }</span>
+
+  /**
+   * Displays the opponents board with hits and misses.
+   *
+   * @param aiPlayer - The opponent.
+   * @param view - Object in which information is sent to appropriate appendable.
+   */
+  public void displayOpponentBoard(AbstractPlayer aiPlayer, ViewImpl view) {
+<span class="fc" id="L42">    view.displayOpponentBoard(aiPlayer, coords);</span>
+<span class="fc" id="L43">  }</span>
+
+  /**
+   * Displays the console player's board with ships, hits and misses.
+   *
+   * @param realUser - The console player.
+   * @param view - Object in which information is sent to appropriate appendable.
+   */
+  public void displayBoard(AbstractPlayer realUser, ViewImpl view) {
+<span class="fc" id="L52">    view.displayBoard(realUser, coords);</span>
+<span class="fc" id="L53">  }</span>
+
+  /**
+   * Initializes the coord objects in this 2D array of coords.
+   */
+  private void initCoords() {
+
+<span class="fc bfc" id="L60" title="All 2 branches covered.">    for (int i = 0; i &lt; coords.length; i++) {</span>
+<span class="fc bfc" id="L61" title="All 2 branches covered.">      for (int j = 0; j &lt; coords[i].length; j++) {</span>
+<span class="fc" id="L62">        coords[i][j] = new Coord(j, i, UNKNOWN);</span>
+      }
+    }
+
+<span class="fc" id="L66">  }</span>
+
+  /**
+   * Produces a list of coords of locations the opponent wants to shoot at on this board.
+   *
+   * @param shots - The number of shots available.
+   * @param view - Object in which information is sent to appropriate appendable.
+   * @return - List of coords on this board.
+   */
+  public List&lt;Coord&gt; takeRealPlayerShots(int shots, ViewImpl view) {
+<span class="fc" id="L76">    return view.shotsFromUser(shots, coords);</span>
+  }
+
+  /**
+   * Produces a list of coords of locations the AI want to shoot at on this board.
+   *
+   * @param shots - The number of shots available.
+   * @param random - A random object to randomize shot selection.
+   * @return - List of coords on this board.
+   */
+  public List&lt;Coord&gt; takeArtificialPlayerShots(int shots, Random random) {
+
+<span class="fc" id="L88">    List&lt;Coord&gt; finalShots = new ArrayList&lt;&gt;();</span>
+
+<span class="fc bfc" id="L90" title="All 2 branches covered.">    if (addToArray) {</span>
+<span class="fc bfc" id="L91" title="All 2 branches covered.">      for (Coord[] row : coords) {</span>
+<span class="fc" id="L92">        arrayOfCoords.addAll(Arrays.asList(row));</span>
+      }
+<span class="fc" id="L94">      addToArray = false;</span>
+    }
+
+<span class="fc bfc" id="L97" title="All 2 branches covered.">    if (shots &lt; arrayOfCoords.size()) {</span>
+<span class="fc bfc" id="L98" title="All 2 branches covered.">      for (int i = 0; i &lt; shots; i++) {</span>
+<span class="fc" id="L99">        int randomIndex = random.nextInt(arrayOfCoords.size());</span>
+<span class="fc" id="L100">        Coord randomCoord = arrayOfCoords.get(randomIndex);</span>
+<span class="fc" id="L101">        finalShots.add(randomCoord);</span>
+<span class="fc" id="L102">        arrayOfCoords.remove(randomCoord);</span>
+      }
+    } else {
+<span class="fc" id="L105">      finalShots.addAll(arrayOfCoords);</span>
+    }
+
+<span class="fc" id="L108">    return finalShots;</span>
+  }
+
+  /**
+   * Adds given shot (coord) to the given shotsThatHitBoard if the given shot hits a ship or an
+   * already hit location on this board.
+   *
+   * @param shotsThatHitBoard - List of coords that hit ships and already hit coords on this board.
+   * @param shot - Opponent shot coordinate location this board.
+   */
+  public void reportBoardDamage(List&lt;Coord&gt; shotsThatHitBoard, Coord shot) {
+
+<span class="fc bfc" id="L120" title="All 2 branches covered.">    for (Coord[] row : coords) {</span>
+<span class="fc bfc" id="L121" title="All 2 branches covered.">      for (Coord coord : row) {</span>
+<span class="fc bfc" id="L122" title="All 2 branches covered.">        if (shot.equals(coord)) {</span>
+<span class="fc" id="L123">          CoordStatus cs = coord.getStatus();</span>
+<span class="pc bpc" id="L124" title="1 of 4 branches missed.">          if (cs != UNKNOWN &amp;&amp; cs != MISS) {</span>
+<span class="fc" id="L125">            shotsThatHitBoard.add(shot);</span>
+<span class="fc" id="L126">            break;</span>
+          }
+        }
+      }
+    }
+
+<span class="fc" id="L132">  }</span>
+
+  /**
+   * Gets this board's 2D array of coords.
+   *
+   * @return - 2D array of coords.
+   */
+  public Coord[][] getCoords() {
+<span class="fc" id="L140">    return coords;</span>
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.10.202304240956</span></div></body></html>

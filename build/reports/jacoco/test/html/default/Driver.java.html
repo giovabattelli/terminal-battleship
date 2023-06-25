@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Driver.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">BattleSalvo</a> &gt; <a href="index.source.html" class="el_package">default</a> &gt; <span class="el_source">Driver.java</span></div><h1>Driver.java</h1><pre class="source lang-java linenums">import controller.BattleshipSalvo;
+import controller.Controller;
+import java.io.InputStreamReader;
+
+/**
+ * This is the main driver of this project.
+ */
+<span class="nc" id="L8">public class Driver {</span>
+  /**
+   * Project entry point
+   *
+   * @param args - no command line args required
+   */
+  public static void main(String[] args) {
+
+<span class="nc" id="L16">    Readable input = new InputStreamReader(System.in);</span>
+<span class="nc" id="L17">    Appendable output = System.out;</span>
+
+<span class="nc" id="L19">    Controller battleSalvo = new BattleshipSalvo(input, output);</span>
+
+<span class="nc" id="L21">    battleSalvo.run();</span>
+
+<span class="nc" id="L23">  }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.10.202304240956</span></div></body></html>

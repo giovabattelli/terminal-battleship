@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="model.GameResultTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2023-06-25T22:59:50" hostname="Giovannis-MacBook-Pro.local" time="0.001">
+  <properties/>
+  <testcase name="getGameOutcomeTest()" classname="model.GameResultTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

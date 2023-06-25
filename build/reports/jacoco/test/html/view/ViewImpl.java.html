@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ViewImpl.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">BattleSalvo</a> &gt; <a href="index.source.html" class="el_package">view</a> &gt; <span class="el_source">ViewImpl.java</span></div><h1>ViewImpl.java</h1><pre class="source lang-java linenums">package view;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
+import model.AbstractPlayer;
+import model.Coord;
+
+/**
+ * Represents the console viewing of a game of BattleSalvo.
+ */
+public class ViewImpl implements IView {
+
+  private Readable input;
+  private Appendable output;
+
+  /**
+   * Creates an object that allows input and output from/to the given locations.
+   *
+   * @param input - From where input is collected.
+   * @param output - Location of where output goes.
+   */
+<span class="fc" id="L24">  public ViewImpl(Readable input, Appendable output) {</span>
+<span class="fc" id="L25">    this.input = input;</span>
+<span class="fc" id="L26">    this.output = output;</span>
+<span class="fc" id="L27">  }</span>
+
+  /**
+   * Appends the given string to this output.
+   *
+   * @param string - String to be appended.
+   */
+  @Override
+  public void displayString(String string) {
+    try {
+<span class="fc" id="L37">      output.append(string);</span>
+<span class="nc" id="L38">    } catch (IOException e) {</span>
+<span class="nc" id="L39">      System.err.println(&quot;Unable to display text in displayString.&quot;);</span>
+<span class="fc" id="L40">    }</span>
+<span class="fc" id="L41">  }</span>
+
+  /**
+   * Displays a player's board.
+   *
+   * @param player - A player that represents the current user.
+   */
+  public void displayBoard(AbstractPlayer player, Coord[][] coords) {
+
+<span class="fc" id="L50">    String userName = player.name();</span>
+
+<span class="fc" id="L52">    displayString(&quot;\n\n&quot; + userName + &quot;\n&quot;);</span>
+<span class="fc bfc" id="L53" title="All 2 branches covered.">    for (int i = 0; i &lt; coords.length; i++) {</span>
+<span class="fc" id="L54">      displayString(&quot;\n&quot;);</span>
+<span class="fc bfc" id="L55" title="All 2 branches covered.">      for (int j = 0; j &lt; coords[i].length; j++) {</span>
+<span class="fc" id="L56">        displayString(coords[i][j].getStatus().getSymbol() + &quot;  &quot;);</span>
+      }
+    }
+
+<span class="fc" id="L60">  }</span>
+
+  /**
+   * Displays only the hit, miss or unknown coords of the opponent's board.
+   *
+   * @param opponent - A player that represents the opponent.
+   */
+  public void displayOpponentBoard(AbstractPlayer opponent, Coord[][] coords) {
+
+<span class="fc" id="L69">    String userName = opponent.name();</span>
+
+<span class="fc" id="L71">    displayString(&quot;\n\n&quot; + userName + &quot;\n&quot;);</span>
+<span class="fc bfc" id="L72" title="All 2 branches covered.">    for (int i = 0; i &lt; coords.length; i++) {</span>
+<span class="fc" id="L73">      displayString(&quot;\n&quot;);</span>
+<span class="fc bfc" id="L74" title="All 2 branches covered.">      for (int j = 0; j &lt; coords[i].length; j++) {</span>
+<span class="fc" id="L75">        String s = coords[i][j].getStatus().getSymbol();</span>
+<span class="pc bpc" id="L76" title="2 of 4 branches missed.">        if (s.equals(&quot;H&quot;) || s.equals(&quot;M&quot;)) {</span>
+<span class="nc" id="L77">          displayString(s + &quot;  &quot;);</span>
+        } else {
+<span class="fc" id="L79">          displayString(&quot;~&quot; + &quot;  &quot;);</span>
+        }
+      }
+    }
+
+<span class="fc" id="L84">  }</span>
+
+  /**
+   * Receives input from user for shots on a board.
+   *
+   * @param shots  - Number of shots available to the user.
+   * @param coords - The coords on the player's board.
+   * @return - A list of coord.
+   */
+  public List&lt;Coord&gt; shotsFromUser(int shots, Coord[][] coords) {
+
+<span class="fc" id="L95">    Scanner sc = new Scanner(input);</span>
+<span class="fc" id="L96">    List&lt;Coord&gt; listOfShots = new ArrayList&lt;&gt;();</span>
+
+<span class="fc" id="L98">    displayString(&quot;\n&quot; + &quot;-&quot;.repeat(66) + &quot;\n&quot; + &quot;Please enter &quot; + shots + &quot; unique shots:\n&quot;);</span>
+
+<span class="fc bfc" id="L100" title="All 2 branches covered.">    while (sc.hasNextLine()) {</span>
+      try {
+<span class="fc bfc" id="L102" title="All 2 branches covered.">        for (int i = 0; i &lt; shots; i++) {</span>
+<span class="fc" id="L103">          String[] inputs = sc.nextLine().split(&quot; &quot;);</span>
+<span class="fc" id="L104">          int x = Integer.parseInt(inputs[0]);</span>
+<span class="fc" id="L105">          int y = Integer.parseInt(inputs[1]);</span>
+<span class="fc" id="L106">          listOfShots.add(findMatching(x, y, coords));</span>
+        }
+<span class="fc" id="L108">        break;</span>
+<span class="nc" id="L109">      } catch (Exception e) {</span>
+<span class="nc" id="L110">        listOfShots.clear();</span>
+<span class="nc" id="L111">        displayString(</span>
+            &quot;\nInvalid shots. Please enter &quot;
+                + shots
+                + &quot; unique shots, [x, y], new line per shot:\n&quot;);
+<span class="nc" id="L115">      }</span>
+    }
+
+<span class="fc" id="L118">    return listOfShots;</span>
+  }
+
+  /**
+   * Given an x and a y value, it returns the corresponding coord in the parameter 2D array
+   * of coords.
+   *
+   * @param x      - An x value.
+   * @param y      - A y value.
+   * @param coords - A list of coordinates on a battleship board.
+   * @return - The coord matching the parameter x and y integers.
+   * @throws IllegalArgumentException - If no coordinate was found given an x and a y value.
+   */
+  private Coord findMatching(int x, int y, Coord[][] coords) throws IllegalArgumentException {
+<span class="pc bpc" id="L132" title="1 of 2 branches missed.">    for (int i = 0; i &lt; coords.length; i++) {</span>
+<span class="fc bfc" id="L133" title="All 2 branches covered.">      for (int j = 0; j &lt; coords[i].length; j++) {</span>
+<span class="fc bfc" id="L134" title="All 4 branches covered.">        if (coords[i][j].getX() == x &amp;&amp; coords[i][j].getY() == y) {</span>
+<span class="fc" id="L135">          return coords[i][j];</span>
+        }
+      }
+    }
+
+<span class="nc" id="L140">    throw new IllegalArgumentException(&quot;No such coordinate(s) present in opponent's board.&quot;);</span>
+  }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.10.202304240956</span></div></body></html>

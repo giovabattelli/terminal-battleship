@@ -1,0 +1,275 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AbstractPlayer.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">BattleSalvo</a> &gt; <a href="index.source.html" class="el_package">model</a> &gt; <span class="el_source">AbstractPlayer.java</span></div><h1>AbstractPlayer.java</h1><pre class="source lang-java linenums">package model;
+
+import static model.CoordStatus.HIT;
+import static model.CoordStatus.MISS;
+import static model.ShipType.BATTLESHIP;
+import static model.ShipType.CARRIER;
+import static model.ShipType.DESTROYER;
+import static model.ShipType.SUBMARINE;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
+import view.ViewImpl;
+
+/**
+ * Represents a player in a game of BattleSalvo.
+ */
+public abstract class AbstractPlayer implements Player {
+
+  protected String userName;
+  private Board board;
+  protected Board otherBoard;
+  protected Random random;
+  protected ViewImpl view;
+  private List&lt;Ship&gt; listOfShips;
+
+  /**
+   * Creates an AbstractPlayer with the given information.
+   *
+   * @param name - Name of this player.
+   * @param view - Object that has input and output and handles them accordingly.
+   * @param board - This player's board in a game of BattleSalvo.
+   * @param other - The opponent's board in a game of BattleSalvo.
+   * @param random - A random object.
+   */
+<span class="fc" id="L37">  public AbstractPlayer(String name, ViewImpl view, Board board, Board other, Random random) {</span>
+<span class="fc" id="L38">    this.userName = name;</span>
+<span class="fc" id="L39">    this.view = view;</span>
+<span class="fc" id="L40">    this.random = random;</span>
+<span class="fc" id="L41">    this.board = board;</span>
+<span class="fc" id="L42">    this.otherBoard = other;</span>
+<span class="fc" id="L43">  }</span>
+
+  /**
+   * Get this player's name.
+   *
+   * @return - String representing this player's name.
+   */
+  @Override
+  public String name() {
+<span class="fc" id="L52">    return userName;</span>
+  }
+
+  /**
+   * Given the specifications for a BattleSalvo board, return a list of ships with their locations
+   * on the board.
+   *
+   * @param height         the height of the board, range: [6, 15] inclusive
+   * @param width          the width of the board, range: [6, 15] inclusive
+   * @param specifications a map of ship type to the number of occurrences each ship should
+   *                       appear on the board
+   * @return the placements of each ship on the board
+   */
+  @Override
+  public List&lt;Ship&gt; setup(int height, int width, Map&lt;ShipType, Integer&gt; specifications) {
+<span class="fc" id="L67">    List&lt;Ship&gt; ships = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L68">    ShipType[] shipTypes = new ShipType[] {CARRIER, BATTLESHIP, DESTROYER, SUBMARINE};</span>
+
+<span class="fc bfc" id="L70" title="All 2 branches covered.">    for (ShipType s : shipTypes) {</span>
+<span class="fc" id="L71">      int numberOfShips = specifications.get(s);</span>
+<span class="fc bfc" id="L72" title="All 2 branches covered.">      for (int i = 0; i &lt; numberOfShips; i++) {</span>
+<span class="fc" id="L73">        Ship newShip = new Ship(s, initShipCoords(s), false);</span>
+<span class="fc" id="L74">        ships.add(newShip);</span>
+      }
+    }
+
+<span class="fc" id="L78">    listOfShips = ships;</span>
+<span class="fc" id="L79">    return ships;</span>
+  }
+
+  /**
+   * Returns a list of coordinates that are vertically or horizontally connected on this board.
+   *
+   * @param shipType - The type of ship from which coordinates will be set.
+   * @return - A list of coordinates.
+   */
+  private List&lt;Coord&gt; initShipCoords(ShipType shipType) {
+
+<span class="fc" id="L90">    List&lt;Coord&gt; horiCoords = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L91">    List&lt;Coord&gt; vertCoords = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L92">    List&lt;Coord&gt; finalShipCoords = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L93">    boolean randomBool = random.nextBoolean();</span>
+
+<span class="fc" id="L95">    filterCoords(horiCoords, vertCoords, shipType.getSize());</span>
+
+<span class="pc bpc" id="L97" title="1 of 2 branches missed.">    if (horiCoords.size() == 0) {</span>
+<span class="nc" id="L98">      Coord vertCoord = vertCoords.get(random.nextInt(vertCoords.size()));</span>
+<span class="nc bnc" id="L99" title="All 2 branches missed.">      for (int i = 0; i &lt; shipType.getSize(); i++) {</span>
+<span class="nc" id="L100">        finalShipCoords.add(board.coords[vertCoord.getY() + i][vertCoord.getX()]);</span>
+      }
+<span class="pc bfc" id="L102" title="All 2 branches covered.">    } else if (vertCoords.size() == 0) {</span>
+<span class="fc" id="L103">      Coord horiCoord = horiCoords.get(random.nextInt(horiCoords.size()));</span>
+<span class="fc bfc" id="L104" title="All 2 branches covered.">      for (int i = 0; i &lt; shipType.getSize(); i++) {</span>
+<span class="fc" id="L105">        finalShipCoords.add(board.coords[horiCoord.getY()][horiCoord.getX() + i]);</span>
+      }
+<span class="fc" id="L107">    } else {</span>
+<span class="fc" id="L108">      Coord horiCoord = horiCoords.get(random.nextInt(horiCoords.size()));</span>
+<span class="fc" id="L109">      Coord vertCoord = vertCoords.get(random.nextInt(vertCoords.size()));</span>
+<span class="fc bfc" id="L110" title="All 2 branches covered.">      for (int i = 0; i &lt; shipType.getSize(); i++) {</span>
+<span class="fc bfc" id="L111" title="All 2 branches covered.">        if (randomBool) {</span>
+<span class="fc" id="L112">          finalShipCoords.add(board.coords[horiCoord.getY()][horiCoord.getX() + i]);</span>
+        } else {
+<span class="fc" id="L114">          finalShipCoords.add(board.coords[vertCoord.getY() + i][vertCoord.getX()]);</span>
+        }
+      }
+    }
+
+<span class="fc" id="L119">    changeStatus(finalShipCoords, shipType);</span>
+
+<span class="fc" id="L121">    return finalShipCoords;</span>
+  }
+
+  /**
+   * Updates the list of vertical coordinates that have space vertically, and the list of horizontal
+   * coordinates that have space horizontally, (number of spaces equivalent to the shipSize).
+   *
+   * @param hori     - The list of coords that have space horizontally given a ship size.
+   * @param vert     - The list of coords that have space vertically given a ship size.
+   * @param shipSize - The size of the ship; how many spaces need to be open vertically or
+   *                 horizontally from a coordinate on a board.
+   */
+  private void filterCoords(List&lt;Coord&gt; hori, List&lt;Coord&gt; vert, int shipSize) {
+<span class="fc bfc" id="L134" title="All 2 branches covered.">    for (int i = 0; i &lt; board.coords.length; i++) {</span>
+<span class="fc bfc" id="L135" title="All 2 branches covered.">      for (int j = 0; j &lt; board.coords[i].length - shipSize + 1; j++) {</span>
+<span class="fc bfc" id="L136" title="All 2 branches covered.">        if (enoughHorizontalSpace(board.coords[i][j], shipSize)) {</span>
+<span class="fc" id="L137">          hori.add(board.coords[i][j]);</span>
+        }
+      }
+    }
+<span class="fc bfc" id="L141" title="All 2 branches covered.">    for (int i = 0; i &lt; board.coords.length - shipSize + 1; i++) {</span>
+<span class="fc bfc" id="L142" title="All 2 branches covered.">      for (int j = 0; j &lt; board.coords[i].length; j++) {</span>
+<span class="fc bfc" id="L143" title="All 2 branches covered.">        if (enoughVerticalSpace(board.coords[i][j], shipSize)) {</span>
+<span class="fc" id="L144">          vert.add(board.coords[i][j]);</span>
+        }
+      }
+    }
+<span class="fc" id="L148">  }</span>
+
+  /**
+   * Checks if the current coord has enough spoace equivalent to the given shipSize horizontally.
+   *
+   * @param current  - A coord.
+   * @param shipSize - The size of a ship.
+   * @return boolean - Whether or not there is space horizontally next to the current given coord.
+   */
+  private boolean enoughHorizontalSpace(Coord current, int shipSize) {
+<span class="fc" id="L158">    boolean spaceAvailable = true;</span>
+
+<span class="fc bfc" id="L160" title="All 2 branches covered.">    for (int i = 0; i &lt; shipSize; i++) {</span>
+<span class="fc bfc" id="L161" title="All 2 branches covered.">      if (!(board.coords[current.getY()][current.getX() + i].getStatus() == CoordStatus.UNKNOWN)) {</span>
+<span class="fc" id="L162">        spaceAvailable = false;</span>
+<span class="fc" id="L163">        break;</span>
+      }
+    }
+
+<span class="fc" id="L167">    return spaceAvailable;</span>
+  }
+
+  /**
+   * Checks if the current coord has enough space equivalent to the given shipSize vertically.
+   *
+   * @param current  - A coord.
+   * @param shipSize - The size of a ship.
+   * @return boolean - Whether or not there is space vertically next to the current given coord.
+   */
+  private boolean enoughVerticalSpace(Coord current, int shipSize) {
+<span class="fc" id="L178">    boolean spaceAvailable = true;</span>
+
+<span class="fc bfc" id="L180" title="All 2 branches covered.">    for (int i = 0; i &lt; shipSize; i++) {</span>
+<span class="fc bfc" id="L181" title="All 2 branches covered.">      if (!(board.coords[current.getY() + i][current.getX()].getStatus() == CoordStatus.UNKNOWN)) {</span>
+<span class="fc" id="L182">        spaceAvailable = false;</span>
+<span class="fc" id="L183">        break;</span>
+      }
+    }
+
+<span class="fc" id="L187">    return spaceAvailable;</span>
+  }
+
+  /**
+   * Updates the status of each coord in the given list of coords based on the given shipType.
+   *
+   * @param coords   - A list of coords adjacent to each other.
+   * @param shipType - shipType populating each coord in the given list of coords.
+   */
+  private void changeStatus(List&lt;Coord&gt; coords, ShipType shipType) {
+<span class="fc bfc" id="L197" title="All 2 branches covered.">    for (Coord c : coords) {</span>
+<span class="fc" id="L198">      c.changeStatus(shipType.getStatus());</span>
+<span class="fc" id="L199">    }</span>
+<span class="fc" id="L200">  }</span>
+
+  /**
+   * Given the list of shots the opponent has fired on this player's board, report which
+   * shots hit a ship on this player's board.
+   *
+   * @param opponentShotsOnBoard the opponent's shots on this player's board
+   * @return a filtered list of the given shots that contain all locations of shots that hit a
+   *         ship on this board.
+   */
+  @Override
+  public List&lt;Coord&gt; reportDamage(List&lt;Coord&gt; opponentShotsOnBoard) {
+
+<span class="fc" id="L213">    List&lt;Coord&gt; shotsThatHitBoard = new ArrayList&lt;&gt;();</span>
+
+<span class="fc bfc" id="L215" title="All 2 branches covered.">    for (Coord coord : opponentShotsOnBoard) {</span>
+<span class="fc" id="L216">      board.reportBoardDamage(shotsThatHitBoard, coord);</span>
+<span class="fc bfc" id="L217" title="All 2 branches covered.">      if (!shotsThatHitBoard.contains(coord)) {</span>
+<span class="fc" id="L218">        coord.changeStatus(MISS);</span>
+      }
+<span class="fc" id="L220">    }</span>
+
+<span class="fc" id="L222">    return shotsThatHitBoard;</span>
+  }
+
+  /**
+   * Reports to this player what shots in their previous volley returned from takeShots()
+   * successfully hit an opponent's ship.
+   *
+   * @param shotsThatHitOpponentShips the list of shots that successfully hit the opponent's ships
+   */
+  @Override
+  public void successfulHits(List&lt;Coord&gt; shotsThatHitOpponentShips) {
+
+<span class="fc" id="L234">    int shotsHit = shotsThatHitOpponentShips.size();</span>
+
+<span class="fc bfc" id="L236" title="All 2 branches covered.">    if (shotsHit == 0) {</span>
+<span class="fc" id="L237">      view.displayString(&quot;\n&quot; + userName + &quot; didn't hit anything! :(\n&quot;);</span>
+    } else {
+<span class="fc bfc" id="L239" title="All 2 branches covered.">      for (Coord coord : shotsThatHitOpponentShips) {</span>
+<span class="fc" id="L240">        coord.changeStatus(HIT);</span>
+<span class="fc" id="L241">      }</span>
+<span class="fc" id="L242">      view.displayString(&quot;\n&quot; + userName + &quot; hit &quot; + shotsHit + &quot; shots! :D\n&quot;);</span>
+    }
+<span class="fc" id="L244">  }</span>
+
+  /**
+   * Notifies the player that the game is over.
+   * Win, lose, and draw should all be supported
+   *
+   * @param result if the player has won, lost, or forced a draw
+   * @param reason the reason for the game ending
+   */
+  @Override
+  public void endGame(GameResult result, String reason) {
+
+<span class="nc" id="L256">  }</span>
+
+  /**
+   * Updates the number of shots a player can fire based on the player's number of remaining ships
+   * that are not sunk.
+   */
+  protected int shotsAvailable() {
+<span class="fc" id="L263">    int possibleShots = 0;</span>
+
+<span class="fc bfc" id="L265" title="All 2 branches covered.">    for (Ship s : listOfShips) {</span>
+<span class="fc bfc" id="L266" title="All 2 branches covered.">      if (!s.getSunk()) {</span>
+<span class="fc" id="L267">        possibleShots++;</span>
+      }
+<span class="fc" id="L269">    }</span>
+
+<span class="fc" id="L271">    return possibleShots;</span>
+  }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.10.202304240956</span></div></body></html>

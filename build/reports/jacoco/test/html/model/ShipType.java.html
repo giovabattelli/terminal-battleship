@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ShipType.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">BattleSalvo</a> &gt; <a href="index.source.html" class="el_package">model</a> &gt; <span class="el_source">ShipType.java</span></div><h1>ShipType.java</h1><pre class="source lang-java linenums">package model;
+
+/**
+ * Represents a type of ship in a game of BattleSalvo
+ */
+<span class="fc" id="L6">public enum ShipType {</span>
+
+<span class="fc" id="L8">  CARRIER(6, CoordStatus.CARRIERSTATUS),</span>
+<span class="fc" id="L9">  BATTLESHIP(5, CoordStatus.BATTLESHIPSTATUS),</span>
+<span class="fc" id="L10">  DESTROYER(4, CoordStatus.DESTROYERSTATUS),</span>
+<span class="fc" id="L11">  SUBMARINE(3, CoordStatus.SUBMARINESTATUS);</span>
+
+  final int size;
+  final CoordStatus coordStatus;
+
+  /**
+   * Creates a ShipType enumeration with the given parameters.
+   *
+   * @param size - The size of this ShipType.
+   * @param coordStatus - The associated CoordStatus of this shipType.
+   */
+<span class="fc" id="L22">  ShipType(int size, CoordStatus coordStatus) {</span>
+<span class="fc" id="L23">    this.size = size;</span>
+<span class="fc" id="L24">    this.coordStatus = coordStatus;</span>
+<span class="fc" id="L25">  }</span>
+
+  /**
+   * Gets the size of this ship type.
+   *
+   * @return - An integer representing the length of this ship type.
+   */
+  public int getSize() {
+<span class="fc" id="L33">    return size;</span>
+  }
+
+  /**
+   * Gets the associated coord status of this ship type.
+   *
+   * @return - a coord status associated with this ship type.
+   */
+  public CoordStatus getStatus() {
+<span class="fc" id="L42">    return coordStatus;</span>
+  }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.10.202304240956</span></div></body></html>
